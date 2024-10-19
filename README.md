@@ -4,6 +4,6 @@
 - SQL
 - MySQL
 
-# Done by: Ola-Oluwajuwon
+# Done by: ArtaxJay
 
 ## For ALX Backend
