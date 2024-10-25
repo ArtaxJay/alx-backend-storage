@@ -1,0 +1,3 @@
+// script lists all docs with name="Holberton school" in d collection school
+
+db.school.find({name:"Holberton school"})
