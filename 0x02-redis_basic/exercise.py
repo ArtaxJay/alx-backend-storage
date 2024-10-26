@@ -58,7 +58,7 @@ def replay(fn: Callable):
 class Cache:
     '''Creates a Redis Cache class'''
     def __init__(self):
-        '''stores an instance of d redis client as a private variable & flush'''
+        '''stores instance of d redis client as a private variable & flush'''
         self._redis = redis.Redis(host='localhost', port=6379, db=0)
         self._redis.flushdb()
 
@@ -76,22 +76,25 @@ class Cache:
 
     def get(self, key: str,
             fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
-        '''convert the data back to the desired format'''
-        value = self._redis.get(key)
+        '''
+        Method does:
+        parses redis byte str, b"str", data frm server back 2 desired utf-8 str
+        '''
+        parsed_utf_8_str = self._redis.get(key)
         if fn:
-            value = fn(value)
-        return value
+            parsed_utf_8_str = fn(parsed_utf_8_str)
+        return parsed_utf_8_str
 
     def get_str(self, key: str) -> str:
-        '''parametrize Cache.get with correct conversion function'''
-        value = self._redis.get(key)
-        return value.decode("utf-8")
+        '''automatically parametrize Cache.get with correct conversion func'''
+        parsed_utf_8_str = self._redis.get(key)
+        return parsed_utf_8_str.decode("utf-8")
 
     def get_int(self, key: str) -> int:
-        '''parametrize Cache.get with correct conversion function'''
-        value = self._redis.get(key)
+        '''same as get_str() above, but with ints'''
+        parsed_utf_8_str = self._redis.get(key)
         try:
-            value = int(value.decode("utf-8"))
+            parsed_utf_8_str = int(parsed_utf_8_str.decode("utf-8"))
         except Exception:
-            value = 0
-        return 
+            parsed_utf_8_str = 0
+        return
